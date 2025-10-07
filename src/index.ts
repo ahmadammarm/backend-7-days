@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import db from "./db"; // Assuming you have a db.ts file for database connection
+import db from "./db";
 
 dotenv.config();
 
