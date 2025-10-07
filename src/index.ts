@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import db from "./db";
+import { Request, Response } from "express";
 
 dotenv.config();
 
@@ -12,7 +13,6 @@ app.get("/", (_, res) => {
     res.json({ message: "Hello, World!" });
 });
 
-import { Request, Response } from "express";
 
 const getAllUsers = async (_: Request, response: Response) => {
     try {
