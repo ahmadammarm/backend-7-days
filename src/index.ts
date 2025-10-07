@@ -18,7 +18,7 @@ const getAllUsers = async (_: Request, response: Response) => {
     try {
         const result = await db.query("SELECT * FROM users");
         response.status(200).json(result.rows);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error fetching users:", error);
         response.status(500).json({ error: "Internal Server Error" });
     }
