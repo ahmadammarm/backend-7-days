@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const postgresPool = new Pool({
+const db = new Pool({
     user: process.env.DB_USERNAME || "",
     host: process.env.DB_HOST || "",
     database: process.env.DB_NAME || "",
@@ -11,4 +11,4 @@ const postgresPool = new Pool({
     port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
 });
 
-export default postgresPool;
+export default db;
