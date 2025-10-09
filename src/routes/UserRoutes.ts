@@ -6,7 +6,7 @@ const UserRouter = Router();
 
 
 UserRouter.get("/users", IsAuthenticated, GetAllUsers);
-UserRouter.post("/users", CreateUser);
+UserRouter.post("/users", IsAuthenticated, CreateUser);
 UserRouter.get("/user/:id", IsAuthenticated, GetAnUserById);
 UserRouter.put("/user/:id", IsAuthenticated, EditAnUserById);
 UserRouter.delete("/user/:id", IsAuthenticated, DeleteAnUserById);
