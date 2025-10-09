@@ -14,10 +14,10 @@ const GetAllUsers = async (_: Request, response: Response) => {
 
 const CreateUser = async (request: Request, response: Response) => {
     try {
-        const { name, email } = request.body;
+        const { name, email, password } = request.body;
         const newUser = await db.query(
-            "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
-            [name, email]
+            "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
+            [name, email, password]
         );
         return response.status(201).json(newUser.rows[0]);
     } catch (error: any) {
