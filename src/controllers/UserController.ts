@@ -4,7 +4,12 @@ import db from "../db";
 const GetAllUsers = async (_: Request, response: Response) => {
     try {
         const users = await db.query("SELECT * FROM users");
-        return response.status(200).json(users.rows);
+        return response.status(200).json({
+            code: 200,
+            success: true,
+            message: "Users retrieved successfully",
+            data: users.rows,
+        });
     } catch (error: any) {
         return response.status(500).json({ error: "Internal Server Error" });
     }
