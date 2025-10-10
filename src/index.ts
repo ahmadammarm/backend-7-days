@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import UserRouter from "./routes/UserRoutes";
 import AuthRoutes from "./routes/AuthRoutes";
+import ProductRouter from "./routes/ProductRoutes";
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ app.use("/api/v1/", UserRouter);
 
 // auth user routes
 app.use("/api/v1/auth", AuthRoutes);
+
+// product manajemen routes
+app.use("/api/v1/", ProductRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
