@@ -37,9 +37,15 @@ const CreateProduct = async (request: Request, response: Response, next: NextFun
             return response.status(400).json({ error: "Name and price are required" });
         }
 
+        let imageUrl = null;
+
+        if (request.file) {
+            imageUrl = `${request.protocol}://${request.get('host')}/uploads/${request.file.filename}`;
+        }
+
         const newProduct = await db.query(
-            'INSERT INTO products (name, price, user_id) VALUES ($1, $2, $3) RETURNING *',
-            [name, price, userId]
+            'INSERT INTO products (name, price, user_id, image_url) VALUES ($1, $2, $3, $4) RETURNING *',
+            [name, price, userId, imageUrl]
         );
 
         response.status(201).json({
@@ -103,9 +109,16 @@ const EditProductById = async (request: Request, response: Response, next: NextF
         if (!name || !price) {
             return response.status(400).json({ error: "Name and price are required" });
         }
+
+        let imageUrl = null;
+
+        if (request.file) {
+            imageUrl = `${request.protocol}://${request.get('host')}/uploads/${request.file.filename}`;
+        }
+
         const updatedProduct = await db.query(
-            'UPDATE products SET name = $1, price = $2 WHERE id = $3 AND user_id = $4 RETURNING *',
-            [name, price, productId, userId]
+            'UPDATE products SET name = $1, price = $2, image_url = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
+            [name, price, imageUrl, productId, userId]
         );
 
         if (updatedProduct.rows.length === 0) {

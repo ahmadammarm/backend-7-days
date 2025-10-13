@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import multer from 'multer';
 import path from 'path';
 import GenerateCode from '../lib/GenerateCode';

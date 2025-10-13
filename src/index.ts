@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import UserRouter from "./routes/UserRoutes";
 import AuthRoutes from "./routes/AuthRoutes";
 import ProductRouter from "./routes/ProductRoutes";
+import path from 'path';
 
 dotenv.config();
 
