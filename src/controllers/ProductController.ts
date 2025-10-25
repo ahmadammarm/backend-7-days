@@ -94,9 +94,9 @@ const GetProductById = async (request: Request, response: Response, next: NextFu
 
 const EditProductById = async (request: Request, response: Response, next: NextFunction) => {
     try {
+
         const userId = request.user?.id;
         const productId = parseInt(request.params.id, 10);
-        const { name, price } = request.body;
 
         if (!userId) {
             return response.status(401).json({ error: "Unauthorized" });
@@ -106,24 +106,35 @@ const EditProductById = async (request: Request, response: Response, next: NextF
             return response.status(400).json({ error: "Invalid product ID" });
         }
 
-        if (!name || !price) {
-            return response.status(400).json({ error: "Name and price are required" });
-        }
-
+        const { name, price } = request.body;
         let imageUrl = null;
 
         if (request.file) {
             imageUrl = `${request.protocol}://${request.get('host')}/uploads/${request.file.filename}`;
         }
 
-        const updatedProduct = await db.query(
-            'UPDATE products SET name = $1, price = $2, image_url = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
-            [name, price, imageUrl, productId, userId]
+        const existingProduct = await db.query(
+            'SELECT * FROM products WHERE id = $1 AND user_id = $2',
+            [productId, userId]
         );
 
-        if (updatedProduct.rows.length === 0) {
+        if (existingProduct.rows.length === 0) {
             return response.status(404).json({ error: "Product not found or not owned by user" });
         }
+
+        const oldProduct = existingProduct.rows[0];
+
+        const updatedName = name ?? oldProduct.name;
+        const updatedPrice = price ?? oldProduct.price;
+        const updatedImageUrl = imageUrl ?? oldProduct.image_url;
+
+        const updatedProduct = await db.query(
+            `UPDATE products
+             SET name = $1, price = $2, image_url = $3, updated_at = NOW()
+             WHERE id = $4 AND user_id = $5
+             RETURNING *`,
+            [updatedName, updatedPrice, updatedImageUrl, productId, userId]
+        );
 
         response.status(200).json({
             code: 200,
@@ -131,10 +142,11 @@ const EditProductById = async (request: Request, response: Response, next: NextF
             message: 'Product updated successfully',
             data: updatedProduct.rows[0],
         });
+
     } catch (error: any) {
         next(error);
     }
-}
+};
 
 const DeleteProductById = async (request: Request, response: Response, next: NextFunction) => {
     try {
